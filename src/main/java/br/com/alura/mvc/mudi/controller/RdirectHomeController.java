@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping
+@RequestMapping("")
+
 public class RdirectHomeController {
-    @GetMapping
+    @GetMapping("/")
     // public String hello(HttpServletRequest request){
     // public String hello(Model model){
-    public String hello() {
+    public String redirect() {
         // request.setAttribute("nome", " thymeleaf ");
         // model.addAttribute("nome", " thymeleaf ");
         return "redirect:/home";
