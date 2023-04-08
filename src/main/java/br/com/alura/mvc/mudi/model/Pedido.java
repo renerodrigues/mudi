@@ -2,16 +2,29 @@ package br.com.alura.mvc.mudi.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-@Entity //MARCA A CLASSE COMO ENTIDADE
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+@Entity // MARCA A CLASSE COMO ENTIDADE
+// @JsonIgnoreProperties(value =
+// {"handler","hibernateLazyInitializer","FieldHandler"},ignoreUnknown = true)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Pedido {
-@Id @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nomeProduto;
@@ -19,57 +32,97 @@ public class Pedido {
     private LocalDate dataDaEntrega;
     private String urlProduto;
     private String urlImagem;
-    private String decricao;
+    private String descricao;
 
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore // quando uma classe vai em branco pode ocorrer o erro No serializer found for
+                // class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no
+                // properties discovered to create BeanSerializer. para evitar use o
+                // @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) na classe
+    private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Oferta> ofertas;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public StatusPedido getStatus() {
         return status;
     }
+
     public void setStatus(StatusPedido status) {
         this.status = status;
     }
+
     public String getNomeProduto() {
         return nomeProduto;
     }
+
     public void setNomeProduto(String nomeProduto) {
         this.nomeProduto = nomeProduto;
     }
+
     public BigDecimal getValorNegociado() {
         return valorNegociado;
     }
+
     public void setValorNegociado(BigDecimal valorNegociado) {
         this.valorNegociado = valorNegociado;
     }
+
     public LocalDate getDataDaEntrega() {
         return dataDaEntrega;
     }
+
     public void setDataDaEntrega(LocalDate dataDaEntrega) {
         this.dataDaEntrega = dataDaEntrega;
     }
+
     public String getUrlProduto() {
         return urlProduto;
     }
+
     public void setUrlProduto(String urlProduto) {
         this.urlProduto = urlProduto;
     }
+
     public String getUrlImagem() {
         return urlImagem;
     }
+
     public void setUrlImagem(String urlImagem) {
         this.urlImagem = urlImagem;
     }
-    public String getDecricao() {
-        return decricao;
+
+    public String getDescricao() {
+        return descricao;
     }
-    public void setDecricao(String decricao) {
-        this.decricao = decricao;
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public List<Oferta> getOfertas() {
+        return ofertas;
+    }
+
+    public void setOfertas(List<Oferta> ofertas) {
+        this.ofertas = ofertas;
     }
 }
